@@ -4,10 +4,10 @@ from scipy.interpolate import interp1d
 from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
-filename1='processed_data/sl_data.csv'  #读取的以回车间隔的不定长波的数据
-filename2='processed_data/cl_data.csv' #写入定长波的数据
+filename1='processed_data/sl_data.csv'  #the data after deal_22,which is not regular
+filename2='processed_data/cl_data.csv' #the data after regular
 hand='left'
-#此程序将不定长的波在长度上归一化
+#regular the data in different length to the same length
 
 def reg(da,l):
     da=np.array(da)
