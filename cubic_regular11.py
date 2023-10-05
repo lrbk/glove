@@ -20,15 +20,13 @@ def reg(da,l):
     for j in range(8):
         line=[]
         line1=[]
-        # sen=da[:,j].astype(np.float16)
         sen=da[:,j].astype(np.int_)
         line.append(sen[0])
-        # f5 = interp1d(x, sen, kind="cubic")
         f5=CubicSpline(x,sen)
         line1=np.round(f5(x_new),2)
         de.append(line1)
    
-    de=np.array(de)  #插值后的data转置
+    de=np.array(de)  
     de=de.T
     with open(filename2,'w+',newline="") as f2:
         writer=csv.writer(f2)

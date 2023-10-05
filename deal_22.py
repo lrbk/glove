@@ -31,7 +31,6 @@ def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列
         minl=min(l0)
         maxl=max(l0)
         if minl<mnl or maxl>mxl:
-        # if minl<600:#right
             return -1
 
         for i in range(nn-n1):
@@ -43,15 +42,8 @@ def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列
                     wave_index.append(i-1)
         maxd.append(max(davg))
     if len(wave_index)==0:
-        # print('波动幅度太小，找不到波')
-        # print(len(s_index))
-        # print(s_index)
-        # print('davg:',davg)
         return -4
-    # if max(wave_index)-min(wave_index)>33:
     if max(wave_index)-min(wave_index)>50:
-        # print('wave_index:',wave_index)
-        # print('具有两个以上的波')
         return -5
 
     endkey=[]
