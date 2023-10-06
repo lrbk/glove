@@ -2,16 +2,14 @@ import csv
 import numpy as np
 filename1='data_new.csv'
 filename4='processed_data/sl_data.csv'  #写入的不定长波的数据
-#首先运行plot程序，随后运行此程序
-#deal_00程序从原始读入的数据中找到波的所在，并将其写入文件
-nn=100 #原始数据中一次动作占多少行
-len_window=4  #平均窗口的长度
+#Firstly we need to run the program 
+nn=100 #length of data
+len_window=4  #average window length
 hand='right'
 
 
 
-def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列 
-    # print('da:',da)
+def cums(n1,da,h0,h1,hand):  #n1:length of window; da:data; h0:threshold of wave; h1:threshold of wave start and end
     nn=len(da)
     s_index={}
     e_index={}
@@ -58,17 +56,13 @@ def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列
             j=i-max(0,skey-15-n1)
             avg.append(round(sum(l0[i:i+n1-1])/n1,2))
             if j>0:
-                # davg.append(round(avg[i]-avg[i-1],2))
                 if abs(avg[j]-avg[j-1])>h1:
-                    # s_index[i-1] = s_index.get(i-1, 0) + 1
-                   endkey.append(i-1)  #只要8个传感器中有一个波动，就记录下来
+                   endkey.append(i-1)  
 
 
-
-    # print(endkey)
     s=min(endkey)+n1-1
     e=max(endkey)+n1-1
-    #e=e+n1+2
+
     if hand=='left':
         aa=4
         bb=25
@@ -78,7 +72,6 @@ def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列
     # if 4<e-s<25:
     if aa<e-s<bb:  
         sens=da[s:e,:]
-        #print(sens)
         print('找到的波长：',e-s+1,'始末位置：',s,e)
         global sum_wave_len
         sum_wave_len+=e-s+1
@@ -87,12 +80,9 @@ def cums(n1,da,h0,h1,hand):  #n1:平均数的长度 d：传感器数据列
             for line in sens:
                     writer.writerow(line)
             writer.writerow('\n')
-        #print("  ",end=" \n") 
         return 1
     else:
-        # print('endkey:',endkey)
         print('s,e,e-s:',s,e,e-s)
-        # print('波开始和结束的位置不正确')
         return -2
 
 def main():
