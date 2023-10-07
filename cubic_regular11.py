@@ -4,8 +4,8 @@ from scipy.interpolate import interp1d
 from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
-filename1='processed_data/sl_data.csv'  #the data after deal_22,which is not regular
-filename2='processed_data/cl_data.csv' #the data after regular
+filename1='processed_data/sl_data.csv'  #the data after deal_22,which is not regularized
+filename2='processed_data/cl_data.csv' #the data after regularizied
 hand='left'
 #regular the data in different length to the same length
 

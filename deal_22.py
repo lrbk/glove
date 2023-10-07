@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 filename1='data_new.csv'
-filename4='processed_data/sl_data.csv'  #写入的不定长波的数据
+filename4='data/sl_data.csv'  #save data
 #Firstly we need to run the program 
 nn=100 #length of data
 len_window=4  #average window length
@@ -72,7 +72,6 @@ def cums(n1,da,h0,h1,hand):  #n1:length of window; da:data; h0:threshold of wave
     # if 4<e-s<25:
     if aa<e-s<bb:  
         sens=da[s:e,:]
-        print('找到的波长：',e-s+1,'始末位置：',s,e)
         global sum_wave_len
         sum_wave_len+=e-s+1
         with open(filename4,'w+',newline="") as f4:
@@ -88,8 +87,8 @@ def cums(n1,da,h0,h1,hand):  #n1:length of window; da:data; h0:threshold of wave
 def main():
     global hand
     if hand=='left':
-        h0=4 #判断有几个波
-        h1=2 #波结束和开始时的变化幅度
+        h0=4 
+        h1=2
     else:
         h0=30
         h1=20
@@ -107,15 +106,15 @@ def main():
     k_label=[] 
     global sum_wave_len
     sum_wave_len=0
-    k_label.append(cums(len_window,data.astype(np.int16),h0,h1,hand))  #平均数窗口的长度，传感器数据列
+    k_label.append(cums(len_window,data.astype(np.int16),h0,h1,hand))  
  
 
-    print('-1，有错误数据的手势个数：',k_label.count(-1))
-    print('-2，波开始和结束的位置不正确的手势个数：',k_label.count(-2))
-    print('-5，具有两个以上的波的手势个数：',k_label.count(-5))
-    print('-4，波动幅度太小，找不到波:',k_label.count(-4))
-    print('1，记录的手势个数：',k_label.count(1))
-    print('记录的平均波长：',sum_wave_len)
+    print('-1,',k_label.count(-1))
+    print('-2,',k_label.count(-2))
+    print('-5,',k_label.count(-5))
+    print('-4,',k_label.count(-4))
+    print('1,',k_label.count(1))
+    print('avg wave length',sum_wave_len)
 
 if __name__ == '__main__':
     main()
