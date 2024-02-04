@@ -37,14 +37,9 @@ num='nonum'
 # model_path = os.path.join('pretrained_model', f"model_{hand}_{num}.model")
 # svm_path = os.path.join('pretrained_model', f"svm_{hand}_{num}.model")
 
-# data_path='datas/rl_data1.csv'
-# label_path='datas/sl_label1.csv'
-# lda_path = "lda_left_nonum.model"
-# model_path = "model_left_nonum.model"
-# svm_path = "svm_left_nonum.model"
 
-data_path='datas/rr_data1.csv'
-label_path='datas/sr_label1.csv'
+data_path='data/rr_data1.csv'
+label_path='data/sr_label1.csv'
 lda_path = "lda_right_nonum.model"
 model_path = "model_right_nonum.model"
 svm_path = "svm_right_nonum.model"
@@ -192,7 +187,7 @@ for dim in range(min_dim,max_dim):
 
         # select the model used in the first layer
         if mm=='mlp':
-            model = MLPClassifier(hidden_layer_sizes=nerouns,learning_rate_init=lr)  # BP神经网络回归模型
+            model = MLPClassifier(hidden_layer_sizes=nerouns,learning_rate_init=lr)  # BP nerual network regression model
             model1= MLPClassifier(hidden_layer_sizes=nerouns,learning_rate_init=lr)
         if mm=='gaussgb':
             model=GaussianNB()
@@ -255,7 +250,7 @@ for dim in range(min_dim,max_dim):
                     data_svm=[]
                     lb_svm=[]
                     for v in value:
-                        data_svm.append(Xtrain0[v])  #Xtrain0：未降维，未数据扩增
+                        data_svm.append(Xtrain0[v])  
                         lb_svm.append(y0tr_or[v])
                     xtr_svm.append(data_svm)
                     ytr_svm.append(lb_svm)
@@ -297,13 +292,13 @@ for dim in range(min_dim,max_dim):
         test_svm_score.append(count/len(y0test))
         print('test_svm_score:',count/len(y0test))
 
-    print('数据扩增后：(扩增倍数%d)' %n_datas)
+    print('after data augumentation:(augumentation times%d)' %n_datas)
     print('mean train score:',sum(train_score)/nsplits)
     print('mean test score:',sum(test_score)/nsplits)
-    print('数据扩增前：' )
+    print('before data augumentation:' )
     print('mean train score:',sum(tr_or)/nsplits)
     print('mean test score:',sum(te_or)/nsplits)  
-    print('未数据扩增，经过svm后：')
+    print('no data augumentation, after svm:')
     print('mean train score:',sum(train_svm_score)/nsplits)
     print('mean test score:',sum(test_svm_score)/nsplits)     
     
