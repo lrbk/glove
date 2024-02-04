@@ -55,7 +55,7 @@ class glv():
         self.wl_r=17
         self.ii=1
         self.wave=0
-        self.tr=0  #未连接手套时的模拟程序
+        self.tr=0  #Simulation program without gloves connected
         self.out=[]
 
 
@@ -68,48 +68,46 @@ class glv():
         root_height = self.root.winfo_screenheight()
         self.root.bind("<Escape>", self.exit_app)
 
-        # 设置标题字体
+        # Set title font
         title_font = ("Arial", 20, "bold")
 
-        # 标题
+        # title
         title_label = tk.Label(self.root, text="S.M.A.R.T LAB", font=title_font)
-        title_label.pack(anchor=tk.NW, padx=20, pady=20)  # 放置在左上角
+        title_label.pack(anchor=tk.NW, padx=20, pady=20)  
 
-        # # 加载 PNG 图片并缩放
-        image = Image.open("logo.png")  # 替换为您的 PNG 图片文件路径
-        new_width = 150  # 新的宽度
-        new_height = 150  # 根据宽度比例计算新的高度
+        # #  PNG loading
+        image = Image.open("logo.png")  
+        new_width = 150  
+        new_height = 150  
         image = image.resize((new_width, new_height))
         photo = ImageTk.PhotoImage(image)
 
-        # 创建 Label 来显示缩小后的图片
+        # Create a Label to display the reduced image
         image_label = tk.Label(self.root, image=photo)
-        image_label.photo = photo  # 保留对图片的引用，否则图片会被垃圾回收
-        image_label.place(x=root_width - new_width-10, y=0)  # 将图片放置在右上角
+        image_label.photo = photo  # Keep the reference to the image, otherwise the image will be garbage collected
+        image_label.place(x=root_width - new_width-10, y=0)  
 
-        # 创建predict_frame
+        # Create predict_frame
         self.predict_frame = tk.Frame(self.root,width=root_width*0.8, height=root_height*0.3)
         self.predict_frame.pack(side=tk.TOP, padx=20, pady=20,anchor=tk.N)
 
-        # 创建predict_text并放置在predict_frame中
+        # Create predict_text and put it in predict_frame
         self.final_predict_text = tk.Text(self.predict_frame, wrap=tk.WORD, font=("Arial", 16) ,height=16,width=100)
-        self.final_predict_text.pack(fill=tk.BOTH, expand=True)  # 填充整个predict_frame
+        self.final_predict_text.pack(fill=tk.BOTH, expand=True)  
 
 
-        # 创建图形绘制区域plot_frame
+        # Create a graphics drawing area
         self.plot_frame = tk.Frame(self.root, width=root_width * 0.2)
-        self.plot_frame.pack(side=tk.LEFT, expand=True,padx=0, pady=0, anchor=tk.SW)  # 放置在左侧，占据左侧底部 40% 的区域
-
-        # 创建图像
+        self.plot_frame.pack(side=tk.LEFT, expand=True,padx=0, pady=0, anchor=tk.SW)  # Placed on the left, occupy the bottom 40% of the left side
+        # Create image
         self.figure_sensor = Figure(figsize=(6, 3), dpi=100)
         self.plot_sensor = self.figure_sensor.add_subplot(111)
 
         self.figure_sensor.subplots_adjust(top=0.9,bottom=0.15,left=0.15, right=0.85)
         self.canvas_sensor = FigureCanvasTkAgg(self.figure_sensor, master=self.plot_frame)
         self.canvas_sensor.get_tk_widget().pack(side=tk.TOP,fill=tk.BOTH,  expand=True)
-        # self.plot_sensor.legend(column_labels,loc='upper left', bbox_to_anchor=(1, 1))  # 添加图例，并设置位置在图像外的右上角
+        # self.plot_sensor.legend(column_labels,loc='upper left', bbox_to_anchor=(1, 1))  # Add a legend and set its position to the upper right outside the image
 
-        # 创建predict_frame
         self.R_frame = tk.Frame(self.root,width=root_width*0.7, height=root_height*0.4)
         self.R_frame.pack(side=tk.BOTTOM, padx=0,fill=tk.BOTH, expand=False,anchor=tk.SE)
 
@@ -117,18 +115,18 @@ class glv():
         title_label.pack(anchor=tk.NW)
         name_label= tk.Label(self.R_frame, text="R1    R2     R3     R4     R5    R6     R7    R8     L1    L2      L3    L4      L5    L6      L7     L8", font=("Arial", 16))
         name_label.pack(anchor=tk.NW,  pady=10) 
-        # 创建实时电阻文本框
+
         self.real_time_R_text = tk.Text(self.R_frame,wrap=tk.WORD, font=("Arial", 16),width=72,height=12)
-        self.real_time_R_text.pack(fill=tk.BOTH, expand=False)  # 填充整个右侧区域
+        self.real_time_R_text.pack(fill=tk.BOTH, expand=False)  
 
         if self.hand=='left':
-            self.wl=14  #归一化后的波长
+            self.wl=14  #wave length after regularization
             if self.num=='nonum':
                 self.L=['q','w','e','r','t','a','s','d','f','g','z','x','c','v','b']
             else:
                 self.L=['1','2','3','4','5','q','w','e','r','t','a','s','d','f','g','z','x','c','v','b']
         else:
-            self.wl=17  #归一化后的波长
+            self.wl=17  
             if self.num=='nonum':
                 self.L=['y','u','h','j','n','m','i','k','l','o','p','+']
             else:
@@ -139,56 +137,56 @@ class glv():
 
     def recv(self):
             while True:
-                data =self.serial.read()#读一个字节数
-                if data ==b'\x04':#如果读到第1个是04，继续读
-                        data =self.serial.read()#读一个字节数
+                data =self.serial.read()
+                if data ==b'\x04':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\xff':#如果读到第2个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\xff':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x1b':#如果读到第3个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x1b':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x1b':#如果读到第4个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x1b':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x05':#如果读到第5个是05，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x05':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x00':#如果读到第6个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x00':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x00':#如果读到第7个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x00':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x00':#如果读到第8个是0，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x00':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x15':#如果读到第9个是15，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x15':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x17':#如果读到第10个是17，继续读
-                        data =self.serial.read()#读一个字节数
+                if data == b'\x17':
+                        data =self.serial.read()
                 else:
                         break
-                if data == b'\x00':#如果读到第11个是00，继续读
-                        data =self.serial.read(19)#读剩下所有字节数
+                if data == b'\x00':
+                        data =self.serial.read(19)
                 else:
                         break        
         
                 break  
             return data
         
-    def receive_n_data(self): #接收n个data，并存入s_data返回(n*26)
+    def receive_n_data(self): #receive n datas, save and return s_data(n*26)
         data1_13=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]                   
         s_data=[]    
         if self.tr==1:
@@ -237,30 +235,25 @@ class glv():
         return s_data    
     
     def plot_conn(self):
-    #获取串口列表
         port_list = list(serial.tools.list_ports.comports())
         print(port_list)
         self.Open=0
-        # self.filename = 'data_new.csv' # 文件名
         
         if len(port_list)==0:
-                print('无可用串口')
+                print('no proper port')
         else:
                 for i in range(0,len(port_list)):
                         print(port_list[i])
                         if('COM5' in port_list[i]):
-                                self.serial = serial.Serial('COM5', 115200, timeout=200)  #填入实际串口号
+                                self.serial = serial.Serial('COM5', 115200, timeout=200)  #Enter the actual serial number
                                 print("serial open success")
                                 self.Open=1
 
     def plot_test(self):
-        if (self.Open==1) :
-            #
-            # xis=list(range(100))
-            # stat=0                 
-            print('\n请进行手势：')
+        if (self.Open==1) :               
+            print('\nGesture Please:')
             s_data=[]                    
-            s_data=np.array(self.receive_n_data()) #100行一个手势
+            s_data=np.array(self.receive_n_data()) #100 rows per gesture
             s_data=s_data.astype(np.int16)
 
             da1=s_data.astype(np.int16)
@@ -304,11 +297,11 @@ class glv():
 
             self.plot_sensor.clear()
             self.plot_sensor.plot(range(len(da1)), da1)
-            #   # 修改为您的实际列名称
+            
             column_labels = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8','L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8']
             self.plot_sensor.set_title("Real-time sensing data (Ω)", loc='left', pad=10)
             self.plot_sensor.set_xlabel("Data Point (Count)")
-            self.plot_sensor.legend(column_labels,loc='upper left', bbox_to_anchor=(1, 1.1),fontsize='x-small')  # 添加图例，并设置位置在图像外的右上角
+            self.plot_sensor.legend(column_labels,loc='upper left', bbox_to_anchor=(1, 1.1),fontsize='x-small') 
             self.canvas_sensor.draw()
             
             # self.root.update_idletasks()   
@@ -327,16 +320,12 @@ class glv():
                 for line in s_data:
                     writer.writerow(line)   
 
-            ##高通滤波
+            ##lowpass 
             # h_data=s_data[:,:]
-            # b, a = signal.butter(8, 0.5, 'lowpass')   #配置滤波器 8 表示滤波器的阶数
+            # b, a = signal.butter(8, 0.5, 'lowpass')  
             # for i in range(26):
             #     s1=s_data[:,i]
-            #     print('s1:',s1)
-            #     print(len(s1))
-            #     h1 = signal.filtfilt(b, a, s1)  #data为要过滤的信号
-            #     print('h1:',h1)
-            #     print(len(h1))
+            #     h1 = signal.filtfilt(b, a, s1)  
             #     for j in range(len(h1)):
             #          h_data[j,i]=h1[j]
 
@@ -344,8 +333,6 @@ class glv():
             for i in range(8):
                 s1=da1[:,i].astype(np.int16)
                 h11=self.denoise(s1)
-                # print('h11:',h11)
-                # print('len h11:',len(h11))
                 for j in range(len(h11)):
                         h_data[j,i]=h11[j]
             
@@ -354,9 +341,7 @@ class glv():
                 writer=csv.writer(f30)
                 for line in s_data:
                     writer.writerow(line)   
-            # plt.plot(xis,da1)
-            # plt.savefig('test_figs/'+str(self.ii)+'.png')
-            # plt.show()
+
             self.wave=self.cums(s_data,self.h0,self.h1) 
             print('h0,h1:',self.h0,self.h1)  
             if self.hand=='left':
@@ -382,11 +367,9 @@ class glv():
 
     def wavelet_noising(self,new_df):
         data = new_df
-        # data = data.values.T.tolist()  # 将np.ndarray()转为列表
         data=list(data)
         w = pywt.Wavelet('sym8')
-        # [ca3, cd3, cd2, cd1] = pywt.wavedec(data, w, level=3)  # 分解波
-        [ca5, cd5, cd4, cd3, cd2, cd1] = pywt.wavedec(data, w, level=5)  # 分解波
+        [ca5, cd5, cd4, cd3, cd2, cd1] = pywt.wavedec(data, w, level=5)  
 
         length1 = len(cd1)
         length0 = len(data)
@@ -398,9 +381,9 @@ class glv():
         sigma = (1.0 / 0.6745) * median_cd1
         lamda = sigma * math.sqrt(2.0 * math.log(float(length0), math.e))
         usecoeffs = []
-        usecoeffs.append(ca5)  # 向列表末尾添加对象
+        usecoeffs.append(ca5)  
 
-        #软硬阈值折中的方法
+        #average the two thresholds
         a = 0.5
 
         for k in range(length1):
@@ -447,13 +430,12 @@ class glv():
 
 
     def denoise(self,data):
-        data_denoising = self.wavelet_noising(data)  #调用小波去噪函数
+        data_denoising = self.wavelet_noising(data) 
         return data_denoising
 
 
 
-    def cums(self,da,h0,h1):  #n1:平均数的长度 d：传感器数据列 
-        # print('采集的数据:',da)
+    def cums(self,da,h0,h1):  
         self.wave=0
         s_index={}
         wave_index=[]
@@ -474,7 +456,7 @@ class glv():
             maxd.append(max(l0))
             if min(l0)<mnl or max(l0)>mxl:
             # if minl<600:#right
-                print('数据有错误')
+                print('there's error in data')
                 return -1
 
             for i in range(self.nn-self.lw):
@@ -485,17 +467,13 @@ class glv():
                         s_index[i-1] = s_index.get(i-1, 0) + 1
                         wave_index.append(i-1)
         if len(wave_index)==0:
-                print('波动幅度太小，找不到波')
-                # print(len(s_index))
-                # print(s_index)
-                # print('davg:',davg)
+                print('Too small amplitude, no wave can be found')
                 self.h0=max(1,self.h0-1)
                 print('h0,h1:',self.h0,self.h1)
                 return -4
-        # if max(wave_index)-min(wave_index)>33:
         if max(wave_index)-min(wave_index)>50:
                 print('wave_index:',wave_index)
-                print('具有两个以上的波,h0=%d,h1=%d'%(self.h0,self.h1))
+                print('two or more waves,h0=%d,h1=%d'%(self.h0,self.h1))
                 self.h0+=1
                 return -5
 
@@ -513,15 +491,13 @@ class glv():
                 j=i-max(0,skey-15-n1)
                 avg.append(round(sum(l0[i:i+n1-1])/n1,2))
                 if j>0:
-                #     davg.append(round(avg[i]-avg[i-1],2))
                     if abs(avg[j]-avg[j-1])>h1:
-                    # s_index[i-1] = s_index.get(i-1, 0) + 1
-                        endkey.append(i-1)  #只要8个传感器中有一个波动，就记录下来
+                        endkey.append(i-1)  
 
         # print(endkey)
         if len(endkey)==0:
             self.h1=max(self.h1-1,1)
-            print('找到波峰，但并未找到完整波形,skey=',skey)
+            print('Found the peak, but no complete waveform,skey=',skey)
             print('s_index:',s_index)
             return -3              
 
@@ -537,7 +513,7 @@ class glv():
         if aa<e-s<bb:  
             self.wave_org=da[s:e,:]
             #print(sens)
-            print('找到的波长：',e-s+1,'始末位置：',s,e)
+            print('Wavelength found',e-s+1,'Start and end position:',s,e)
             if e-s+1<self.wl-1:
                   self.h1=self.h1-6/sqrt(self.ii)
             if e-s+1>self.wl+1:
@@ -553,7 +529,7 @@ class glv():
         else:
             # print('endkey:',endkey)
             print('s,e,e-s:',s,e,e-s)
-            print('波开始和结束的位置不正确')
+            print('Inappropriate start and end positions')
             if e-s<=aa:
                   self.h1=max(1,self.h1-1)
             if e-s>=bb:
@@ -572,7 +548,6 @@ class glv():
         for j in range(8):
                 line=[]
                 line1=[]
-                # sen=da[:,j].astype(np.float16)
                 sen=da[:,j].astype(np.int_)
                 line.append(sen[0])
                 # f5 = interp1d(x, sen, kind="cubic")
@@ -580,8 +555,8 @@ class glv():
                 line1=np.round(f5(x_new),2)
                 de.append(line1)
    
-        de=np.array(de)  #插值后的data转置
-        self.cubic=de.T  #长度归一化后的data
+        de=np.array(de) 
+        self.cubic=de.T  
 
     def regular_whole(self):
         data=np.array(self.cubic,dtype=float)
@@ -596,13 +571,9 @@ class glv():
             for j in range(8):
                 line.append((data[i,j]-min1[j])/(max1[j]-min1[j]))
             d.append(line)
-        self.regularized=np.array(d)  #整体归一化后的测试数据
+        self.regularized=np.array(d)   #test data after normalization
 
     def svm_test(self):
-        # if self.hand=='left':
-        #     len_data=14
-        # else:
-        #     len_data=17
         len_data=self.wl
         hand=self.hand
         num=self.num
@@ -620,7 +591,7 @@ class glv():
             else:
                 c_err=[] 
 
-        # 加载模型
+        # load model
         with open(lda_path, 'rb') as f:
             lda_loaded = pickle.load(f)
         with open(model_path, 'rb') as f:
@@ -632,7 +603,7 @@ class glv():
         X=[]
         for i in range(0,1):
             x=[]
-            for j in range(0,8):#8列数据
+            for j in range(0,8):
                 height=data[len_data*i:len_data*i+len_data,j].tolist()
                 x.extend(height)
             X.append(x)
@@ -670,8 +641,8 @@ class glv():
 
 
     def exit_app(self, event=None):
-        self.root.quit()  # 退出应用
-        self.root.destroy()  # 销毁主窗口
+        self.root.quit()  
+        self.root.destroy() 
 
     def main(self):
         if os.path.exists(Md.fn4):
@@ -686,7 +657,7 @@ class glv():
         while(1):               
             if self.run==0:
                 break
-            self.plot_test()  # 数据输入
+            self.plot_test()  # data input
             if self.wave == 1:
                 self.reg()  # cubic
                 self.regular_whole()
@@ -694,7 +665,7 @@ class glv():
 
             self.ii += 1  
         if self.ii>80:
-            print('从第80次开始，找到的波的平均波长：',self.sum_wave_len/self.times)
+            print('The average wave length found from the 80th time:',self.sum_wave_len/self.times)
 
 
 
@@ -704,11 +675,10 @@ if __name__ == "__main__":
     Md = glv()
 
     if Md.tr == 0:
-        Md.plot_conn()  # 这部分完成手套的检验
+        Md.plot_conn()  # check
     else:
         Md.Open = 1
 
-    # 启动主程序
+
     Md.main()
-    # if Md.ii>80:
-    #     print('从第80次开始，找到的波的平均波长：',Md.sum_wave_len/Md.times)
+
